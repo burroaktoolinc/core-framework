@@ -46,7 +46,8 @@ class CreateTicket extends AbstractType
                 'class' => 'selectpicker form-control'
             ],
             'query_builder' => function (EntityRepository $ticketTypeRepository) {
-                return $ticketTypeRepository->createQueryBuilder('ticketType')->where('ticketType.isActive = 1');
+                return $ticketTypeRepository->createQueryBuilder('ticketType')->where('ticketType.isActive = :active')
+                ->setParameter('active', true);
             },
             'placeholder' => 'Choose query type',
         ]);

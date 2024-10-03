@@ -162,7 +162,8 @@ class UserService
             return $results;
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('supportGroup.id, supportGroup.name')->from(SupportGroup::class, 'supportGroup')
-                ->andwhere('supportGroup.isActive = 1');
+                ->andwhere('supportGroup.isActive = :active')
+                ->setParameter('active', true);
         if($request) {
             $qb->andwhere("supportGroup.name LIKE :groupName");
             $qb->setParameter('groupName', '%'.urldecode($request->query->get('query')).'%');
@@ -195,7 +196,8 @@ class UserService
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('supportTeam.id, supportTeam.name')
            ->from(SupportTeam::class, 'supportTeam');
-        $qb->andwhere('supportTeam.isActive = 1');
+        $qb->andwhere('supportTeam.isActive = :active')
+            ->setParameter('active', true);
         
         if($request) {
             $qb->andwhere("supportTeam.name LIKE :subGroupName");
@@ -305,7 +307,8 @@ class UserService
                 ->leftJoin('u.userInstance', 'userInstance')
                 ->andwhere('userInstance.supportRole != :roles')
                 ->setParameter('roles', 4)
-                ->andwhere('userInstance.isActive = 1')
+                ->andwhere('userInstance.isActive = :active')
+                ->setParameter('active', true)
                 ->orderBy('name','ASC');
 
         if($request) {
@@ -344,7 +347,8 @@ class UserService
                 ->leftJoin('userInstance.supportGroups', 'supportGroup')
                 ->andWhere('userInstance.supportRole != :roles')->setParameter('roles', 4)
                 ->andwhere('supportGroup.id = :groupId')->setParameter('groupId', $groupId)
-                ->andwhere('userInstance.isActive = 1');
+                ->andwhere('userInstance.isActive = :active')
+                ->setParameter('active', true);
 
         $data = $qb->getQuery()->getArrayResult();
         return $data;
@@ -361,8 +365,10 @@ class UserService
                 ->andwhere('supportTeam.id = :subGroupId')
                 ->setParameter('roles', 4)
                 ->setParameter('subGroupId', $subGroupId)
-                ->andwhere('supportTeam.isActive = 1')
-                ->andwhere('userInstance.isActive = 1');
+                ->andwhere('supportTeam.isActive = :active_team')
+                ->setParameter('active_team', true)
+                ->andwhere('userInstance.isActive = :active_user')
+                ->setParameter('active_user ', true);
 
         $data = $qb->getQuery()->getArrayResult();
         return $data;
@@ -444,7 +450,8 @@ class UserService
                 ->leftJoin('userInstance.supportTeams','supportTeams')
                 ->andwhere('user.id = :userId')
                 ->andwhere('userInstance.supportRole != :agentRole')
-                ->andwhere('supportTeams.isActive = 1')
+                ->andwhere('supportTeams.isActive = :active')
+                ->setParameter('active', true)
                 ->setParameter('userId', $userId)
                 ->setParameter('agentRole', '4'); 
 
@@ -457,7 +464,8 @@ class UserService
                 ->leftJoin('user.userInstance','userInstance')
                 ->leftJoin('userInstance.supportGroups','supportGroup')
                 ->andwhere('user.id = :userId')
-                ->andwhere('supportGroup.isActive = 1')
+                ->andwhere('supportGroup.isActive = :active')
+                ->setParameter('active', true)
                 ->setParameter('userId', $userId);
 
         return array_column($qb->getQuery()->getArrayResult(), 'id');
