@@ -429,7 +429,8 @@ class TicketService
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('tp.id','tp.code As name')->from(TicketType::class, 'tp')
-                ->andwhere('tp.isActive = 1')
+                ->andwhere('tp.isActive = :active')
+                ->setParameter('active', true)
                 ->orderBy('tp.code', 'ASC');
 
         return $types = $qb->getQuery()->getArrayResult();
