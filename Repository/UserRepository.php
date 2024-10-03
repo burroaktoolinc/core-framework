@@ -178,7 +178,8 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         $starredQb->select('COUNT(u.id) as countUser')
                 ->from($this->getEntityName(), 'u')
                 ->leftJoin('u.userInstance', 'userInstance')
-                ->andwhere('userInstance.isActive = 1')
+                ->andwhere('userInstance.isActive = :active')
+                ->setParameter('active', true)
                 ->Andwhere('userInstance.supportRole = :roles')
                 ->setParameter('roles', 4);
 
@@ -252,7 +253,8 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('userInstance.supportGroups','ug')
             ->andwhere('u.id = :userId')
             ->setParameter('userId', $user->getId())
-            ->andwhere('ug.isActive = 1');
+            ->andwhere('ug.isActive = :active')
+            ->setParameter('active', true);
 
         return array_map('current', $query->getQuery()->getResult());
     }
@@ -265,7 +267,8 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('userInstance.supportTeams','ut')
             ->andwhere('u.id = :userId')
             ->andwhere('userInstance.supportRole != :agentRole')
-            ->andwhere('ut.isActive = 1')
+            ->andwhere('ut.isActive = :active')
+            ->setParameter('active', true)
             ->setParameter('userId', $user->getId())
             ->setParameter('agentRole', '4');
 
