@@ -40,6 +40,7 @@ class EmailTemplatesRepository extends EntityRepository
 
         $newQb = clone $qb;
         $newQb->select('COUNT(DISTINCT sr.id)');
+        $newQb->groupby('sr.id');
 
         $results = $paginator->paginate(
             $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY)->setHint('knp_paginator.count', $newQb->getQuery()->getSingleScalarResult()),
