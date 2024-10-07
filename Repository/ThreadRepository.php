@@ -118,6 +118,8 @@ class ThreadRepository extends \Doctrine\ORM\EntityRepository
 
         $newQb = clone $qb;
         $newQb->select('COUNT(DISTINCT th.id)');
+        $newQb->groupby('th.id');
+
         $paginator = $container->get('knp_paginator');
         $results = $paginator->paginate(
             $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY)->setHint('knp_paginator.count', $newQb->getQuery()->getSingleScalarResult()),

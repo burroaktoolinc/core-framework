@@ -87,6 +87,7 @@ class TicketRepository extends \Doctrine\ORM\EntityRepository
 
         $newQb = clone $qb;
         $newQb->select('COUNT(DISTINCT t.id)');
+        $newQb->groupBy('t.id');
 
         $results = $paginator->paginate(
             $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY)->setHint('knp_paginator.count', $newQb->getQuery()->getSingleScalarResult()),
@@ -176,6 +177,7 @@ class TicketRepository extends \Doctrine\ORM\EntityRepository
 
         $newQb = clone $qb;
         $newQb->select('COUNT(DISTINCT t.id)');
+        $newQb->groupby('t.id');
 
         $results = $paginator->paginate(
             $qb->getQuery()->setHydrationMode(Query::HYDRATE_ARRAY)->setHint('knp_paginator.count', $newQb->getQuery()->getSingleScalarResult()),
